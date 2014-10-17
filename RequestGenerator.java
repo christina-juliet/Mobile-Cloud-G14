@@ -17,7 +17,7 @@ public class RequestGenerator {
 	static Timer timer = new Timer();
 	static ArrayList<Integer> randomNumbersList = new ArrayList<Integer>();   
 	
-	static ArrayList<MobileRequest> mobileRequestList = new ArrayList<MobileRequest>();
+	//static ArrayList<MobileRequest> mobileRequestList = new ArrayList<MobileRequest>(); <christina>
 	
     static class Task extends TimerTask {
         
@@ -41,12 +41,13 @@ public class RequestGenerator {
             Storage1 = new int[]{5,40,25,20,50};
             //NW is MBPS
             Network1 = new int[]{ 20,40,50,25,15};
-            
-            
+            //Location in latitude and longitude <christina>
+            String[] Location1;
+            Location1 = new String[]{"33.0,84.0", "47.0,122.0", "39.0,119.0", "39.0,104.0", "42.0,71.0"};
+                        
             
             //start the loop to generate 10 requests in random time intervals
-            
-         
+                     
             if (loopCount <= maxNumberOfRequests){
             	
             	//generating random numbers without duplicates
@@ -72,7 +73,7 @@ public class RequestGenerator {
         		
         		//printing request details, delay time and request generated time
                 System.out.println("Request Number --> "+ loopCount +"----Random Number-->" +selectedRandomNumber );
-                System.out.println("CPU: "+CPU1[selectedRandomNumber-1]+"\nStorage: "+Storage1[selectedRandomNumber-1]+"\nBandwidth: "+Network1[selectedRandomNumber-1]);
+                System.out.println("CPU: "+CPU1[selectedRandomNumber-1]+"\nStorage: "+Storage1[selectedRandomNumber-1]+"\nBandwidth: "+Network1[selectedRandomNumber-1]+"\nLocation: "+Location1[selectedRandomNumber-1]);
                 System.out.println("The time delay for next request is "+delay/1000 + " Seconds.");
                 timer.schedule(new Task(), delay);
                 System.out.println("Request generated at " +new Date()+"\n");
@@ -93,11 +94,21 @@ public class RequestGenerator {
                 String OSRam=CPUParameter.substring(CPUParameter.indexOf(',')+1);
                 int OSRam1 = Integer.parseInt(OSRam.trim());
                 
+                String LocationParameter = Location1[selectedRandomNumber-1];
+                //splitting to get latitude
+                String latitude = LocationParameter.substring(0,LocationParameter.indexOf(','));
+                double latitude1 = Double.parseDouble(latitude.trim());
+                //splitting to get longitude
+                String longitude= LocationParameter.substring(LocationParameter.indexOf(',')+1);
+                double longitude1 = Double.parseDouble(longitude.trim());                
+                
                 //forming the mobile request and adding the request to the mobileRequestList
-                mobileRequestList.add(new MobileRequest(selectedRandomNumber, Storage1[selectedRandomNumber-1], OSType, OSBit1, OSRam1, Network1[selectedRandomNumber-1]));
-                
-                
-                
+                //mobileRequestList.add(new MobileRequest(selectedRandomNumber, Storage1[selectedRandomNumber-1], OSType, OSBit1, OSRam1, Network1[selectedRandomNumber-1])); <christina>
+                MobileRequest request = new MobileRequest(selectedRandomNumber, Storage1[selectedRandomNumber-1], OSType, OSBit1, OSRam1, Network1[selectedRandomNumber-1], latitude1, longitude1);
+                // request has to be sent to MQ
+                // Displaying the request details
+                System.out.println("MobileRequest# "+selectedRandomNumber+":");
+                System.out.println("Storage: " +Storage1[selectedRandomNumber-1]+"\nOS Type: "+ OSType+"\nOS Bit: "+ OSBit1+"\nOS Ram: "+ OSRam1+"\nNetwork: "+ Network1[selectedRandomNumber-1]+"\nLatitude: "+ latitude1+"\nLongitude: "+ longitude1);
                 //incrementing the static counters
                 loopCount++;
                 randomNumberCount++;
@@ -106,14 +117,9 @@ public class RequestGenerator {
             else {
             	System.out.println("\n---All " + maxNumberOfRequests +" Requests has been created--- ");
             	timer.cancel();
-            }
-        		
-            	
-            
+            }    		            	            
         }
     }
-
-	 
 
     public static void main(String[] args) throws Exception {
     	
