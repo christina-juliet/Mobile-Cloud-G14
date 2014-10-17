@@ -2,6 +2,7 @@ package randomRequestGenerator;
 
 /*
 Created by Radhika - gives the details of each of mobile request generated;
+Tag <christina> - Changes to add location as part of the request.
 */
 public class MobileRequest 
 {
@@ -13,6 +14,8 @@ public class MobileRequest
 	private  CpuRequest cpuQuantity;
 	//Network in MBPS
 	private int networkQuantity;
+	// Location in latitude and longitude <christina>
+	private Location location; // <christina>
 	
 	
 	//Constructors - the constructor has to have Request number minimum.
@@ -24,23 +27,26 @@ public class MobileRequest
 		storageQuantity= 25;
 		cpuQuantity = new CpuRequest();
 		networkQuantity= 20;
+		location = new Location(); // <christina>
 	}
 	
-	public MobileRequest(int requestNo,int requiredStorage, String OSType, int OSBits, int OSRam,int requiredNw)
+	public MobileRequest(int requestNo,int requiredStorage, String OSType, int OSBits, int OSRam,int requiredNw, double latitude, double longitude) // <christina>
 	{
 		requestIdentfier= requestNo;
 		storageQuantity=requiredStorage;
 		cpuQuantity=new CpuRequest(OSType,OSBits,OSRam);
 		networkQuantity=requiredNw;
+		location = new Location(latitude, longitude); // <christina>
 	}
 	
 	
-	public MobileRequest(int requestNo,int requiredStorage, CpuRequest cpuRequestParameters ,int requiredNw)
+	public MobileRequest(int requestNo,int requiredStorage, CpuRequest cpuRequestParameters ,int requiredNw, Location locationParameters) 
 	{
 		requestIdentfier= requestNo;
 		storageQuantity=requiredStorage;
 		cpuQuantity=cpuRequestParameters;
 		networkQuantity=requiredNw;
+		location = locationParameters;
 	}
 
 	
@@ -77,6 +83,15 @@ public class MobileRequest
 
 	public void setNetworkQuantity(int networkQuantity) {
 		this.networkQuantity = networkQuantity;
+	}
+	
+	/* <christina>*/
+	public Location getLocation(){
+		return location;
+	}
+	
+	public void setLocation(Location loc){
+		this.location = loc;
 	}
 	
 	
